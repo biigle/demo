@@ -1,0 +1,13 @@
+{
+    "name": "biigle/demo",
+    "require": {
+        "biigle/volumes": "~1.13"
+    },
+    "require-dev": {
+    },
+    "autoload": {
+        "psr-4": {
+            "Biigle\\Modules\\Demo\\": "src"
+        }
+    }
+}
