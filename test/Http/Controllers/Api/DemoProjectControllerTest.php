@@ -12,6 +12,7 @@ class DemoProjectControllerTest extends ApiTestCase
 {
     public function testStoreEmpty()
     {
+        config(['demo.project_name' => 'My demo project']);
         $this->doTestApiRoute('POST', '/api/v1/projects/demo');
 
         $this->beUser();
@@ -20,6 +21,7 @@ class DemoProjectControllerTest extends ApiTestCase
 
         $project = $this->user()->projects()->first();
         $this->assertNotNull($project);
+        $this->assertEquals('My demo project', $project->name);
         $this->assertContains("{$this->user()->firstname} {$this->user()->lastname}", $project->description);
         $this->assertFalse($project->labelTrees()->exists());
         $this->assertFalse($project->volumes()->exists());

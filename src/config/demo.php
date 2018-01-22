@@ -13,4 +13,9 @@ return [
     */
     'volume_id' => null,
 
+    /*
+    | Name of each new demo project.
+    */
+    'project_name' => 'Demo Project',
+
 ];

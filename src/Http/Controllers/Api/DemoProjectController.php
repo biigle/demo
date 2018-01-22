@@ -28,7 +28,7 @@ class DemoProjectController extends Controller
     {
         $user = $auth->user();
         $project = new Project;
-        $project->name = 'Demo Project';
+        $project->name = config('demo.project_name');
         $project->description = "Demo project of {$user->firstname} {$user->lastname}";
         $project->setCreator($user);
         $project->save();
