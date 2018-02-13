@@ -1,7 +1,7 @@
 {
     "name": "biigle/demo",
     "require": {
-        "biigle/volumes": "~1.13"
+        "biigle/volumes": ">=1.13"
     },
     "require-dev": {
     },
