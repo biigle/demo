@@ -2,6 +2,7 @@
 
 namespace Biigle\Modules\Demo\Tests\Http\Controllers\Api;
 
+use Queue;
 use ApiTestCase;
 use Biigle\Role;
 use Biigle\Visibility;
@@ -73,9 +74,9 @@ class DemoProjectControllerTest extends ApiTestCase
 
         config(['demo.volume_id' => $image->volume_id]);
 
-        $this->expectsJobs(\Biigle\Jobs\GenerateThumbnails::class);
-        $this->expectsJobs(\Biigle\Jobs\CollectImageMetaInfo::class);
+        Queue::fake();
         $this->post('/api/v1/projects/demo')->assertStatus(302);
+        Queue::assertPushed(\Biigle\Jobs\ProcessNewImages::class);
 
         $volume = $this->user()->projects()->first()->volumes()->first();
         $this->assertNotNull($volume);

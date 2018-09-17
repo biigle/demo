@@ -30,7 +30,7 @@ class DemoProjectController extends Controller
         $project = new Project;
         $project->name = config('demo.project_name');
         $project->description = "Demo project of {$user->firstname} {$user->lastname}";
-        $project->setCreator($user);
+        $project->creator()->associate($user);
         $project->save();
 
         $tree = LabelTree::publicTrees()->find(config('demo.label_tree_id'));
