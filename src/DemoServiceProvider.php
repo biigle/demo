@@ -35,6 +35,7 @@ class DemoServiceProvider extends ServiceProvider
             'viewMixins' => [
                 'dashboardMain',
             ],
+            'apidoc' => [__DIR__.'/Http/Controllers/Api/'],
         ]);
     }
 
