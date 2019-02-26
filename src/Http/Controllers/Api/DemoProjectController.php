@@ -3,11 +3,10 @@
 namespace Biigle\Modules\Demo\Http\Controllers\Api;
 
 use Biigle\Role;
-use Biigle\Image;
 use Biigle\Volume;
 use Biigle\Project;
 use Biigle\LabelTree;
-use Ramsey\Uuid\Uuid;
+use Biigle\Jobs\CreateNewImages;
 use Illuminate\Contracts\Auth\Guard;
 use Biigle\Http\Controllers\Api\Controller;
 
@@ -43,17 +42,9 @@ class DemoProjectController extends Controller
             $newVolume = $volume->replicate();
             $newVolume->save();
             $project->addVolumeId($newVolume->id);
+            $images = $volume->images()->pluck('filename')->toArray();
 
-            $images = $volume->images()->pluck('filename')->map(function ($item) use ($newVolume) {
-                return [
-                    'filename' => $item,
-                    'uuid' => Uuid::uuid4(),
-                    'volume_id' => $newVolume->id,
-                ];
-            });
-
-            Image::insert($images->toArray());
-            $newVolume->handleNewImages();
+            (new CreateNewImages($newVolume, $images))->handle();
         }
 
         return redirect()->route('project', $project->id);
