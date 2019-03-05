@@ -26,6 +26,8 @@ class DemoProjectController extends Controller
     public function store(Guard $auth)
     {
         $user = $auth->user();
+        $this->authorize('create', Project::class);
+
         $project = new Project;
         $project->name = config('demo.project_name');
         $project->description = "Demo project of {$user->firstname} {$user->lastname}";

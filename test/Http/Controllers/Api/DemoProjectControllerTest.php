@@ -85,4 +85,13 @@ class DemoProjectControllerTest extends ApiTestCase
         $this->assertEquals($image->volume->url, $volume->url);
         $this->assertEquals($image->filename, $volume->images()->first()->filename);
     }
+
+    public function testStoreGuest()
+    {
+        $this->beUser();
+        $this->user()->role_id = Role::guestId();
+        $this->user()->save();
+        $this->post('/api/v1/projects/demo')->assertStatus(403);
+        $this->assertFalse($this->user()->projects()->exists());
+    }
 }
