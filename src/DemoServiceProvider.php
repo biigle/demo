@@ -33,7 +33,7 @@ class DemoServiceProvider extends ServiceProvider
 
         $modules->register('demo', [
             'viewMixins' => [
-                'dashboardMain',
+                'dashboardButtons',
             ],
             'apidoc' => [__DIR__.'/Http/Controllers/Api/'],
         ]);
