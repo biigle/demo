@@ -2,13 +2,17 @@
 
 namespace Biigle\Modules\Demo\Http\Controllers\Api;
 
+use Queue;
 use Biigle\Role;
 use Biigle\Volume;
 use Biigle\Project;
 use Biigle\LabelTree;
+use Ramsey\Uuid\Uuid;
 use Biigle\Jobs\CreateNewImages;
+use Biigle\Modules\Videos\Video;
 use Illuminate\Contracts\Auth\Guard;
 use Biigle\Http\Controllers\Api\Controller;
+use Biigle\Modules\Videos\Jobs\ProcessNewVideo;
 
 class DemoProjectController extends Controller
 {
@@ -47,6 +51,17 @@ class DemoProjectController extends Controller
             $images = $volume->images()->pluck('filename')->toArray();
 
             (new CreateNewImages($newVolume, $images))->handle();
+        }
+
+        if (class_exists(Video::class)) {
+            $video = Video::find(config('demo.video_id'));
+            if ($video) {
+                $newVideo = $video->replicate();
+                $newVideo->project_id = $project->id;
+                $newVideo->uuid = Uuid::uuid4();
+                $newVideo->save();
+                Queue::push(new ProcessNewVideo($newVideo));
+            }
         }
 
         return redirect()->route('project', $project->id);

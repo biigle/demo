@@ -8,6 +8,8 @@ use Biigle\Role;
 use Biigle\Visibility;
 use Biigle\Tests\ImageTest;
 use Biigle\Tests\LabelTreeTest;
+use Biigle\Modules\Videos\Video;
+use Biigle\Tests\Modules\Videos\VideoTest;
 
 class DemoProjectControllerTest extends ApiTestCase
 {
@@ -93,5 +95,35 @@ class DemoProjectControllerTest extends ApiTestCase
         $this->user()->save();
         $this->post('/api/v1/projects/demo')->assertStatus(403);
         $this->assertFalse($this->user()->projects()->exists());
+    }
+
+    public function testStoreWithVideo()
+    {
+        if (!class_exists(VideoTest::class)) {
+            $this->markTestSkipped('Required the biigle/videos module.');
+        }
+
+        $this->beUser();
+        $video = VideoTest::create();
+        config(['demo.video_id' => 999]);
+
+        $this->post('/api/v1/projects/demo')->assertStatus(302);
+        // Video does not exist.
+        $project = $this->user()->projects()->first();
+        $this->assertFalse(Video::where('project_id', $project->id)->exists());
+        $project->delete();
+
+        config(['demo.video_id' => $video->id]);
+
+        Queue::fake();
+        $this->post('/api/v1/projects/demo')->assertStatus(302);
+        Queue::assertPushed(\Biigle\Modules\Videos\Jobs\ProcessNewVideo::class);
+
+        $project = $this->user()->projects()->first();
+        $demoVideo = Video::where('project_id', $project->id)->first();
+        $this->assertNotNull($video);
+        $this->assertNotEquals($video->id, $demoVideo->id);
+        $this->assertEquals($video->name, $demoVideo->name);
+        $this->assertEquals($video->url, $demoVideo->url);
     }
 }

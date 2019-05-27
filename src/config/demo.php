@@ -18,4 +18,9 @@ return [
     */
     'project_name' => env('DEMO_PROJECT_NAME', 'Demo Project'),
 
+    /*
+    | ID of the video to create for each demo project. Requires the biigle/videos module.
+    */
+    'video_id' => env('DEMO_VIDEO_ID', null),
+
 ];
