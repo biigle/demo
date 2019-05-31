@@ -60,6 +60,7 @@ class DemoProjectController extends Controller
                 $newVideo = $video->replicate();
                 $newVideo->project_id = $project->id;
                 $newVideo->uuid = Uuid::uuid4();
+                $newVideo->creator()->associate($user);
                 $newVideo->save();
                 Queue::push(new ProcessNewVideo($newVideo));
             }

@@ -126,5 +126,6 @@ class DemoProjectControllerTest extends ApiTestCase
         $this->assertNotEquals($video->id, $demoVideo->id);
         $this->assertEquals($video->name, $demoVideo->name);
         $this->assertEquals($video->url, $demoVideo->url);
+        $this->assertEquals($demoVideo->creator_id, $this->user()->id);
     }
 }
