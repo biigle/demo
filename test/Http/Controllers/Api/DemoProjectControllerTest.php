@@ -86,6 +86,7 @@ class DemoProjectControllerTest extends ApiTestCase
         $this->assertEquals($image->volume->name, $volume->name);
         $this->assertEquals($image->volume->url, $volume->url);
         $this->assertEquals($image->filename, $volume->images()->first()->filename);
+        $this->assertEquals($volume->creator_id, $this->user()->id);
     }
 
     public function testStoreGuest()

@@ -46,6 +46,7 @@ class DemoProjectController extends Controller
         $volume = Volume::find(config('demo.volume_id'));
         if ($volume) {
             $newVolume = $volume->replicate();
+            $newVolume->creator()->associate($user);
             $newVolume->save();
             $project->addVolumeId($newVolume->id);
             $images = $volume->images()->pluck('filename')->toArray();
