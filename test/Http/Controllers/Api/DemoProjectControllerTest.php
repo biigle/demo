@@ -25,7 +25,7 @@ class DemoProjectControllerTest extends ApiTestCase
         $project = $this->user()->projects()->first();
         $this->assertNotNull($project);
         $this->assertEquals('My demo project', $project->name);
-        $this->assertContains("{$this->user()->firstname} {$this->user()->lastname}", $project->description);
+        $this->assertStringContainsString("{$this->user()->firstname} {$this->user()->lastname}", $project->description);
         $this->assertFalse($project->labelTrees()->exists());
         $this->assertFalse($project->volumes()->exists());
     }
