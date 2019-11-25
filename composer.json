@@ -7,9 +7,7 @@
         }
     ],
     "require": {
-        "biigle/volumes": ">=1.13"
-    },
-    "require-dev": {
+        "biigle/volumes": "^1.13 | dev-master"
     },
     "autoload": {
         "psr-4": {
