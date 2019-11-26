@@ -1,5 +1,7 @@
 # BIIGLE Demo Module
 
+[![Test status](https://github.com/biigle/demo/workflows/Tests/badge.svg)](https://github.com/biigle/demo/actions?query=workflow%3ATests)
+
 This is the BIIGLE module to offer a demo project to new users.
 
 ## Installation
