@@ -14,9 +14,6 @@
             "email": "martin@cebitec.uni-bielefeld.de"
         }
     ],
-    "require": {
-        "biigle/volumes": "^1.13 | dev-master"
-    },
     "autoload": {
         "psr-4": {
             "Biigle\\Modules\\Demo\\": "src"
