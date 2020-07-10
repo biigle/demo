@@ -8,8 +8,8 @@ use Biigle\Role;
 use Biigle\Visibility;
 use Biigle\Tests\ImageTest;
 use Biigle\Tests\LabelTreeTest;
-use Biigle\Modules\Videos\Video;
-use Biigle\Tests\Modules\Videos\VideoTest;
+use Biigle\Video;
+use Biigle\Tests\VideoTest;
 
 class DemoProjectControllerTest extends ApiTestCase
 {
@@ -100,10 +100,6 @@ class DemoProjectControllerTest extends ApiTestCase
 
     public function testStoreWithVideo()
     {
-        if (!class_exists(VideoTest::class)) {
-            $this->markTestSkipped('Required the biigle/videos module.');
-        }
-
         $this->beUser();
         $video = VideoTest::create();
         config(['demo.video_id' => 999]);
@@ -118,7 +114,7 @@ class DemoProjectControllerTest extends ApiTestCase
 
         Queue::fake();
         $this->post('/api/v1/projects/demo')->assertStatus(302);
-        Queue::assertPushed(\Biigle\Modules\Videos\Jobs\ProcessNewVideo::class);
+        Queue::assertPushed(\Biigle\Jobs\ProcessNewVideo::class);
 
         $project = $this->user()->projects()->first();
         $demoVideo = Video::where('project_id', $project->id)->first();
