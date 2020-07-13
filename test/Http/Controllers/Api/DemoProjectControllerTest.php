@@ -2,14 +2,14 @@
 
 namespace Biigle\Modules\Demo\Tests\Http\Controllers\Api;
 
-use Queue;
 use ApiTestCase;
 use Biigle\Role;
-use Biigle\Visibility;
 use Biigle\Tests\ImageTest;
 use Biigle\Tests\LabelTreeTest;
-use Biigle\Video;
 use Biigle\Tests\VideoTest;
+use Biigle\Video;
+use Biigle\Visibility;
+use Queue;
 
 class DemoProjectControllerTest extends ApiTestCase
 {

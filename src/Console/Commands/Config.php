@@ -2,8 +2,8 @@
 
 namespace Biigle\Modules\Demo\Console\Commands;
 
-use Illuminate\Console\Command;
 use Biigle\Modules\Demo\DemoServiceProvider as ServiceProvider;
+use Illuminate\Console\Command;
 
 class Config extends Command
 {

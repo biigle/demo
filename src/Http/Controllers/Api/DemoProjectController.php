@@ -2,17 +2,17 @@
 
 namespace Biigle\Modules\Demo\Http\Controllers\Api;
 
-use Queue;
-use Biigle\Role;
-use Biigle\Volume;
-use Biigle\Project;
-use Biigle\LabelTree;
-use Ramsey\Uuid\Uuid;
-use Biigle\Jobs\CreateNewImages;
-use Biigle\Video;
-use Illuminate\Contracts\Auth\Guard;
 use Biigle\Http\Controllers\Api\Controller;
+use Biigle\Jobs\CreateNewImages;
 use Biigle\Jobs\ProcessNewVideo;
+use Biigle\LabelTree;
+use Biigle\Project;
+use Biigle\Role;
+use Biigle\Video;
+use Biigle\Volume;
+use Illuminate\Contracts\Auth\Guard;
+use Queue;
+use Ramsey\Uuid\Uuid;
 
 class DemoProjectController extends Controller
 {
