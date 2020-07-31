@@ -8,16 +8,10 @@ return [
     'label_tree_id' => env('DEMO_LABEL_TREE_ID', null),
 
     /*
-    | ID of the image volume to attach to each demo project. The volume is cloned without
-    | existing annotations, i.e. each demo project gets its own volume.
+    | IDs of the volumes to attach to each demo project. The volumes are cloned without
+    | existing annotations, i.e. each demo project gets its own volumes.
     */
-    'image_volume_id' => env('DEMO_VOLUME_ID', null),
-
-    /*
-    | ID of the video volume to attach to each demo project. The volume is cloned without
-    | existing annotations, i.e. each demo project gets its own volume.
-    */
-    'video_volume_id' => env('DEMO_VIDEO_ID', null),
+    'volume_ids' => array_filter(explode(',', env('DEMO_VOLUME_IDS', ''))),
 
     /*
     | Name of each new demo project.

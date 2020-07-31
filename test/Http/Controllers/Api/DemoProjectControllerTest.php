@@ -63,11 +63,11 @@ class DemoProjectControllerTest extends ApiTestCase
         $this->assertEquals($tree->id, $project->labelTrees()->first()->id);
     }
 
-    public function testStoreWithImageVolume()
+    public function testStoreWithVolumes()
     {
         $this->beUser();
         $image = ImageTest::create();
-        config(['demo.image_volume_id' => 999]);
+        config(['demo.volume_ids' => [999]]);
 
         $this->post('/api/v1/projects/demo')->assertStatus(302);
         // Volume does not exist.
@@ -75,7 +75,7 @@ class DemoProjectControllerTest extends ApiTestCase
         $this->assertNull($project->volumes()->first());
         $project->delete();
 
-        config(['demo.image_volume_id' => $image->volume_id]);
+        config(['demo.volume_ids' => [$image->volume_id]]);
 
         Queue::fake();
         $this->post('/api/v1/projects/demo')->assertStatus(302);
@@ -87,33 +87,6 @@ class DemoProjectControllerTest extends ApiTestCase
         $this->assertEquals($image->volume->name, $volume->name);
         $this->assertEquals($image->volume->url, $volume->url);
         $this->assertEquals($image->filename, $volume->images()->first()->filename);
-        $this->assertEquals($volume->creator_id, $this->user()->id);
-    }
-
-    public function testStoreWithVideoVolume()
-    {
-        $this->beUser();
-        $video = VideoTest::create();
-        config(['demo.video_volume_id' => 999]);
-
-        $this->post('/api/v1/projects/demo')->assertStatus(302);
-        // Volume does not exist.
-        $project = $this->user()->projects()->first();
-        $this->assertNull($project->volumes()->first());
-        $project->delete();
-
-        config(['demo.video_volume_id' => $video->volume_id]);
-
-        Queue::fake();
-        $this->post('/api/v1/projects/demo')->assertStatus(302);
-        Queue::assertPushed(ProcessNewVolumeFiles::class);
-
-        $volume = $this->user()->projects()->first()->volumes()->first();
-        $this->assertNotNull($volume);
-        $this->assertNotEquals($video->volume_id, $volume->id);
-        $this->assertEquals($video->volume->name, $volume->name);
-        $this->assertEquals($video->volume->url, $volume->url);
-        $this->assertEquals($video->filename, $volume->videos()->first()->filename);
         $this->assertEquals($volume->creator_id, $this->user()->id);
     }
 

@@ -38,14 +38,11 @@ class DemoProjectController extends Controller
             $project->labelTrees()->attach($tree);
         }
 
-        $volume = Volume::find(config('demo.image_volume_id'));
-        if ($volume) {
-            $this->replicateVolume($volume, $project, $user);
-        }
-
-        $volume = Volume::find(config('demo.video_volume_id'));
-        if ($volume) {
-            $this->replicateVolume($volume, $project, $user);
+        foreach (config('demo.volume_ids', []) as $id) {
+            $volume = Volume::find($id);
+            if ($volume) {
+                $this->replicateVolume($volume, $project, $user);
+            }
         }
 
         return redirect()->route('project', $project->id);
