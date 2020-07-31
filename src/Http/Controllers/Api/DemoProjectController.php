@@ -3,16 +3,11 @@
 namespace Biigle\Modules\Demo\Http\Controllers\Api;
 
 use Biigle\Http\Controllers\Api\Controller;
-use Biigle\Jobs\CreateNewImages;
-use Biigle\Jobs\ProcessNewVideo;
+use Biigle\Jobs\CreateNewImagesOrVideos;
 use Biigle\LabelTree;
 use Biigle\Project;
-use Biigle\Role;
-use Biigle\Video;
 use Biigle\Volume;
 use Illuminate\Contracts\Auth\Guard;
-use Queue;
-use Ramsey\Uuid\Uuid;
 
 class DemoProjectController extends Controller
 {
@@ -43,27 +38,34 @@ class DemoProjectController extends Controller
             $project->labelTrees()->attach($tree);
         }
 
-        $volume = Volume::find(config('demo.volume_id'));
+        $volume = Volume::find(config('demo.image_volume_id'));
         if ($volume) {
-            $newVolume = $volume->replicate();
-            $newVolume->creator()->associate($user);
-            $newVolume->save();
-            $project->addVolumeId($newVolume->id);
-            $images = $volume->images()->pluck('filename')->toArray();
-
-            (new CreateNewImages($newVolume, $images))->handle();
+            $this->replicateVolume($volume, $project, $user);
         }
 
-        $video = Video::find(config('demo.video_id'));
-        if ($video) {
-            $newVideo = $video->replicate();
-            $newVideo->project_id = $project->id;
-            $newVideo->uuid = Uuid::uuid4();
-            $newVideo->creator()->associate($user);
-            $newVideo->save();
-            Queue::push(new ProcessNewVideo($newVideo));
+        $volume = Volume::find(config('demo.video_volume_id'));
+        if ($volume) {
+            $this->replicateVolume($volume, $project, $user);
         }
 
         return redirect()->route('project', $project->id);
+    }
+
+    /**
+     * Replicate a volume.
+     *
+     * @param Volume $volume
+     * @param Project $project
+     * @param User $creator
+     */
+    protected function replicateVolume($volume, $project, $creator)
+    {
+        $newVolume = $volume->replicate();
+        $newVolume->creator()->associate($creator);
+        $newVolume->save();
+        $project->addVolumeId($newVolume->id);
+        $files = $volume->files()->pluck('filename')->toArray();
+
+        (new CreateNewImagesOrVideos($newVolume, $files))->handle();
     }
 }
