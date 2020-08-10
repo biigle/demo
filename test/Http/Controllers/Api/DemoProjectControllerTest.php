@@ -3,6 +3,7 @@
 namespace Biigle\Modules\Demo\Tests\Http\Controllers\Api;
 
 use ApiTestCase;
+use Biigle\Jobs\ProcessNewVolumeFiles;
 use Biigle\Role;
 use Biigle\Tests\ImageTest;
 use Biigle\Tests\LabelTreeTest;
@@ -62,11 +63,11 @@ class DemoProjectControllerTest extends ApiTestCase
         $this->assertEquals($tree->id, $project->labelTrees()->first()->id);
     }
 
-    public function testStoreWithVolume()
+    public function testStoreWithVolumes()
     {
         $this->beUser();
         $image = ImageTest::create();
-        config(['demo.volume_id' => 999]);
+        config(['demo.volume_ids' => [999]]);
 
         $this->post('/api/v1/projects/demo')->assertStatus(302);
         // Volume does not exist.
@@ -74,11 +75,11 @@ class DemoProjectControllerTest extends ApiTestCase
         $this->assertNull($project->volumes()->first());
         $project->delete();
 
-        config(['demo.volume_id' => $image->volume_id]);
+        config(['demo.volume_ids' => [$image->volume_id]]);
 
         Queue::fake();
         $this->post('/api/v1/projects/demo')->assertStatus(302);
-        Queue::assertPushed(\Biigle\Jobs\ProcessNewImages::class);
+        Queue::assertPushed(ProcessNewVolumeFiles::class);
 
         $volume = $this->user()->projects()->first()->volumes()->first();
         $this->assertNotNull($volume);
@@ -96,32 +97,5 @@ class DemoProjectControllerTest extends ApiTestCase
         $this->user()->save();
         $this->post('/api/v1/projects/demo')->assertStatus(403);
         $this->assertFalse($this->user()->projects()->exists());
-    }
-
-    public function testStoreWithVideo()
-    {
-        $this->beUser();
-        $video = VideoTest::create();
-        config(['demo.video_id' => 999]);
-
-        $this->post('/api/v1/projects/demo')->assertStatus(302);
-        // Video does not exist.
-        $project = $this->user()->projects()->first();
-        $this->assertFalse(Video::where('project_id', $project->id)->exists());
-        $project->delete();
-
-        config(['demo.video_id' => $video->id]);
-
-        Queue::fake();
-        $this->post('/api/v1/projects/demo')->assertStatus(302);
-        Queue::assertPushed(\Biigle\Jobs\ProcessNewVideo::class);
-
-        $project = $this->user()->projects()->first();
-        $demoVideo = Video::where('project_id', $project->id)->first();
-        $this->assertNotNull($video);
-        $this->assertNotEquals($video->id, $demoVideo->id);
-        $this->assertEquals($video->name, $demoVideo->name);
-        $this->assertEquals($video->url, $demoVideo->url);
-        $this->assertEquals($demoVideo->creator_id, $this->user()->id);
     }
 }
