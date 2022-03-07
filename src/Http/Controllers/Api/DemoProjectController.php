@@ -17,7 +17,7 @@ class DemoProjectController extends Controller
      * @api {post} projects/demo Create a new demo project
      * @apiGroup Projects
      * @apiName StoreProjectDemo
-     * @apiPermission user
+     * @apiPermission editor
      * @apiDescription Redirects to the newly created project.
      *
      * @param Guard $auth
