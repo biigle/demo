@@ -1,6 +1,6 @@
 <?php
 
-namespace Biigle\Modules\Demo\Tests\Http\Controllers\Api;
+namespace Biigle\Tests\Modules\Demo\Http\Controllers\Api;
 
 use ApiTestCase;
 use Biigle\Jobs\ProcessNewVolumeFiles;
