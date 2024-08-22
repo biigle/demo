@@ -25,7 +25,7 @@ class DemoProjectControllerTest extends ApiTestCase
 
         $project = $this->user()->projects()->first();
         $this->assertNotNull($project);
-        $this->assertEquals('My demo project', $project->name);
+        $this->assertSame('My demo project', $project->name);
         $this->assertStringContainsString("{$this->user()->firstname} {$this->user()->lastname}", $project->description);
         $this->assertFalse($project->labelTrees()->exists());
         $this->assertFalse($project->volumes()->exists());
@@ -60,7 +60,7 @@ class DemoProjectControllerTest extends ApiTestCase
         $this->post('/api/v1/projects/demo')->assertStatus(302);
 
         $project = $this->user()->projects()->first();
-        $this->assertEquals($tree->id, $project->labelTrees()->first()->id);
+        $this->assertSame($tree->id, $project->labelTrees()->first()->id);
     }
 
     public function testStoreWithVolumes()
@@ -84,10 +84,10 @@ class DemoProjectControllerTest extends ApiTestCase
         $volume = $this->user()->projects()->first()->volumes()->first();
         $this->assertNotNull($volume);
         $this->assertNotEquals($image->volume_id, $volume->id);
-        $this->assertEquals($image->volume->name, $volume->name);
-        $this->assertEquals($image->volume->url, $volume->url);
-        $this->assertEquals($image->filename, $volume->images()->first()->filename);
-        $this->assertEquals($volume->creator_id, $this->user()->id);
+        $this->assertSame($image->volume->name, $volume->name);
+        $this->assertSame($image->volume->url, $volume->url);
+        $this->assertSame($image->filename, $volume->images()->first()->filename);
+        $this->assertSame($volume->creator_id, $this->user()->id);
     }
 
     public function testStoreGuest()
