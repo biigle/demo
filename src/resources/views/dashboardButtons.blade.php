@@ -1,4 +1,4 @@
-@if ($projects->isEmpty())
+@if ($projects->isEmpty() || auth()->user()->created_at->gt(now()->subWeek()))
     @can ('create', Biigle\Project::class)
         <form role="form" method="POST" action="{{ url('api/v1/projects/demo') }}" style="margin-top: 5px;display:inline-block;">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
