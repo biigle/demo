@@ -34,9 +34,9 @@ class DemoProjectControllerTest extends ApiTestCase
     public function testStoreWithLabelTree()
     {
         $this->beUser();
-        $tree = LabelTreeTest::create(['visibility_id' => Visibility::privateId()]);
+        $tree = LabelTreeTest::create(['visibility' => Visibility::PRIVATE]);
         // Add member so the label tree is no global label tree and attached by default.
-        $tree->addMember($this->editor(), Role::admin());
+        $tree->addMember($this->editor(), Role::ADMIN);
 
         config(['demo.label_tree_id' => 9999]);
         $this->post('/api/v1/projects/demo')->assertStatus(302);
@@ -54,7 +54,7 @@ class DemoProjectControllerTest extends ApiTestCase
         $this->assertFalse($project->labelTrees()->exists());
         $project->delete();
 
-        $tree->visibility_id = Visibility::publicId();
+        $tree->visibility = Visibility::PUBLIC;
         $tree->save();
         config(['demo.label_tree_id' => $tree->id]);
         $this->post('/api/v1/projects/demo')->assertStatus(302);
@@ -93,7 +93,7 @@ class DemoProjectControllerTest extends ApiTestCase
     public function testStoreGuest()
     {
         $this->beUser();
-        $this->user()->role_id = Role::guestId();
+        $this->user()->role = Role::GUEST;
         $this->user()->save();
         $this->post('/api/v1/projects/demo')->assertStatus(403);
         $this->assertFalse($this->user()->projects()->exists());
