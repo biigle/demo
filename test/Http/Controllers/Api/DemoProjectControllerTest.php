@@ -3,13 +3,13 @@
 namespace Biigle\Tests\Modules\Demo\Http\Controllers\Api;
 
 use ApiTestCase;
+use Biigle\Enums\Role;
+use Biigle\Enums\Visibility;
 use Biigle\Jobs\ProcessNewVolumeFiles;
-use Biigle\Role;
 use Biigle\Tests\ImageTest;
 use Biigle\Tests\LabelTreeTest;
 use Biigle\Tests\VideoTest;
 use Biigle\Video;
-use Biigle\Visibility;
 use Queue;
 
 class DemoProjectControllerTest extends ApiTestCase
