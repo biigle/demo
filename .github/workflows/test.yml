@@ -34,6 +34,16 @@ jobs:
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
       working-directory: ../core
 
+    - name: Update .env
+      run: |
+        echo USER_ID=$(id -u) >> .env
+        echo GROUP_ID=$(id -g) >> .env
+      working-directory: ../core
+
+    - name: Set testing key
+      run: echo "APP_KEY=base64:STZFA4bQKDjE2mlpRPmsJ/okG0eCh4RHd9BghtZeYmQ=" >> .env
+      working-directory: ../core
+
     - name: Install Dependencies
       run: composer install --no-ansi --no-interaction --no-scripts --prefer-dist --ignore-platform-reqs
       working-directory: ../core
@@ -44,11 +54,7 @@ jobs:
         composer require --no-ansi --no-interaction --no-scripts --ignore-platform-reqs ${GITHUB_REPOSITORY}:@dev
         sed -i "/Insert Biigle module service providers/i Biigle\\\\Modules\\\\${MODULE_NAME}\\\\${MODULE_NAME}ServiceProvider::class," config/app.php
         mkdir -p tests/php/Modules
-        ln -sf ../../../vendor/${GITHUB_REPOSITORY}/tests tests/php/Modules/${MODULE_NAME}
-      working-directory: ../core
-
-    - name: Generate key
-      run: php artisan key:generate
+        ln -sf ../../../vendor/${GITHUB_REPOSITORY}/test tests/php/Modules/${MODULE_NAME}
       working-directory: ../core
 
     - name: Fetch base images
