@@ -54,7 +54,7 @@ jobs:
         composer require --no-ansi --no-interaction --no-scripts --ignore-platform-reqs ${GITHUB_REPOSITORY}:@dev
         sed -i "/Insert Biigle module service providers/i Biigle\\\\Modules\\\\${MODULE_NAME}\\\\${MODULE_NAME}ServiceProvider::class," config/app.php
         mkdir -p tests/php/Modules
-        ln -sf ../../../vendor/${GITHUB_REPOSITORY}/tests tests/php/Modules/${MODULE_NAME}
+        ln -sf ../../../vendor/${GITHUB_REPOSITORY}/test tests/php/Modules/${MODULE_NAME}
       working-directory: ../core
 
     - name: Fetch base images
