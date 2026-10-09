@@ -57,10 +57,6 @@ jobs:
         ln -sf ../../../vendor/${GITHUB_REPOSITORY}/tests tests/php/Modules/${MODULE_NAME}
       working-directory: ../core
 
-    - name: Generate key
-      run: php artisan key:generate
-      working-directory: ../core
-
     - name: Fetch base images
       run: |
         docker pull ghcr.io/biigle/app:latest
